@@ -70,7 +70,7 @@ Now use the appropriate setters on your IMSDataSource object to set the followin
 3. **driver type**: 4
 4. **user**: To be provided by the lab instructor
 5. **password**: To be provided by the lab instructor
-6. **database name**: PHIDPHO1 *<-- This is actually the PSB name*
+6. **database name**: DFSIVP1 *<-- This is actually the PSB name*
 
 Setter example for host:
 
@@ -136,7 +136,7 @@ The `DatabaseMetaData` class contains [several methods](https://docs.oracle.com/
 
 ```java
 // Display IMS PCB information
-ResultSet rs = dbmd.getSchemas("PHIDPHO1", null);
+ResultSet rs = dbmd.getSchemas("DFSIVP1", null);
 ResultSetMetaData rsmd = rs.getMetaData();
 int colCount = rsmd.getColumnCount();
 		
@@ -162,10 +162,10 @@ We can dig even further into the database segments and fields with the following
 
 ```java
 // Display IMS segment information
-rs = dbmd.getTables("PHIDPHO1", "PCB01", null, null);
+rs = dbmd.getTables("DFSIVP1", "PCB01", null, null);
 
 // Display IMS field information
-rs = dbmd.getColumns("PHIDPHO1", "PCB01", "A1111111", null);
+rs = dbmd.getColumns("DFSIVP1", "PCB01", "A1111111", null);
 ```
 
 You'll notice that there is a lack of field information for the phonebook database. Traditionally, additional metadata information would be stored in a COBOL copybook or a PL/I include file. It would be up to the IMS Database Administrator (DBA) and IMS System Programmer to incorporate this information into the IMS catalog. 
