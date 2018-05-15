@@ -17,23 +17,28 @@ Skills:
 * SQL programming - Beginner level
 * IMS - Beginner level 
 
+### Download the ims-java-lab project from GitHub
+Download the ims-java-lab project by click on the **Clone or Download button** and then select **Download ZIP**.  
+
 ### Importing the Eclipse project
 The ims-java-lab project is designed as an Eclipse project and will need to get imported into your Eclipse development environment.
 1. Open up Eclipse
-2. Accept the default workspace or specify your own
-3. In the top menu, select File->Import
-4. Choose the "Existing Projects into Workspace" option in the popup wizard and click Next
-5. Click the "Browse" button next to the "Select root directory" radio and navigate to where you downloaded the ims-java-lab project.
+2. Accept the default workspace or specify your own (e.g. c:\IMSJavaLab)
+3. In the top menu, select **File->Import**
+4. Choose the **Existing Projects into Workspace** option in the popup wizard and click **Next**
+5. Click the **Browse** button next to the **Select root directory** radio button and navigate to where you downloaded the ims-java-lab project or **Select archive file** radio button and specify the zip file name.
 
 ### Opening up the lab files
 1. Once your project has been imported, you should have a **ims-java-lab** project in the **Project Explorer**. 
 2. Expand out the following folders: **ims-java-lab->src->com.ibm.ims.lab**
 3. Double click on the `MyIMSJavaApplication.java` file. The majority of your work will be done in this file.
 
+<!--
 ### Adding the IMS JDBC driver to your project
 You'll notice that the you'll have a build path error for a required library. That library is the IMS Universal JDBC driver which was not bundled as part of this sample for legal reasons. 
 1. Download the [IMS Universal JDBC driver](https://www.ibm.com/it-infrastructure/z/ims/resources)
 2. Copy the imsudb.jar file to the **lib/** directory in your **ims-java-lab** project
+-->
 
 ## Writing a distributed Java application
 The first part of the lab is to develop a distributed Java application. In this case when we say distributed, we're specifically talking about any non z/OS environment that supports Java. 
@@ -75,7 +80,12 @@ Now use the appropriate setters on your IMSDataSource object to set the followin
 Setter example for host:
 
 ```java
-ds.setHost("zserveros.centers.ihost.com");
+ds.setHost("yourHost");
+ds.setPortNumber(7013);
+ds.setUser("YOURID");
+ds.setPassword("YOURPWD");
+ds.setDriverType(4);
+ds.setDatabaseName("DFSIVP1");
 ```
 
 Once you've set all of the connection information, you can create a connection by calling the `getConnection()` method on your IMSDataSource object.
@@ -152,38 +162,36 @@ In addition to using DatabaseMetaData for discovery of the database, we also use
 
 ```
 TABLE_SCHEM: PCB01
-TABLE_CATALOG: PHIDPHO1
-PCB_PROCESSING_OPTIONS: AP
-DBD_NAME: DHIDPHO1
-DBD_TIMESTAMP: 1810711232054
+TABLE_CATALOG: DFSIVP1
+PCB_PROCESSING_OPTIONS: A
+DBD_NAME: IVPDB1
+DBD_TIMESTAMP: 1620715292519
 ```
 
+<!--
 We can dig even further into the database segments and fields with the following query. Use the same format as above to process the ResultSet object:
-
-```java
+java
 // Display IMS segment information
 rs = dbmd.getTables("DFSIVP1", "PCB01", null, null);
-
 // Display IMS field information
 rs = dbmd.getColumns("DFSIVP1", "PCB01", "A1111111", null);
-```
+-->
 
+<!--
 You'll notice that there is a lack of field information for the phonebook database. Traditionally, additional metadata information would be stored in a COBOL copybook or a PL/I include file. It would be up to the IMS Database Administrator (DBA) and IMS System Programmer to incorporate this information into the IMS catalog. 
-
 Since we don't have either available, we're going to take advantage of a little known [secret](https://imsinsiders.wordpress.com/2018/03/15/how-to-try-out-an-ims-catalog-without-an-actual-catalog-using-the-ims-jdbc-driver/). The way the IMS JDBC driver retrieves metadata from the IMS catalog is through the IMS GUR DL/I call which returns an XML representation of the requested resource. For now, we will proxy our local XML file instead of issuing a GUR for additional metadata. You should see the two files we will be referencing in the /src directory for both our PSB and DBD:
 * PHIDPHO1.xml
 * IVPDB1.xml
-
 Let's modify our connection property in the `createAnImsConnection()` method to point to our local XML file:
 ```java
 ds.setDatabaseName("xml://PHIDPHO1");
 ```
-
 Now re-run the `DatabaseMetaData.getColumns()` method to view the additional fields. You should now see the following additional fields:
 * LASTNAME
 * FIRSTNAME
 * EXTENTION
 * ZIPCODE
+--!>
 
 That completes Exercise 2. Let's go ahead and disable the following line in the `main()` method by commenting it out:
 ```java
