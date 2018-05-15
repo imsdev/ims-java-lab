@@ -260,93 +260,77 @@ Feel free to come back to this exercise in order to look at the translation for 
 //executeAndDisplaySqlQuery();
 ```
 
-
+<!--
 ### Exercise 5: Inserting a record into the database
 Now that we have a base understanding of what the IMS database looks like and what data resides in that database, we'll go ahead and insert in a new phonebook record. Let's start off by uncommenting the following lines in the `main()` method
 ```java
 executeASqlInsertOrUpdate();
 executeAndDisplaySqlQuery();
 ```
-
 Then navigate to the `executeASqlInsertOrUpdate()` method.
-
 The database segment that we have been looking at is keyed off of the LASTNAME parameter, this means we will need a unique last name value from what's already in the database (which you should know from Exercise 3).
-
 The format for a SQL INSERT statement can be found [here](https://www.w3schools.com/sql/sql_insert.asp). Similar to what we did for a SQL SELECT, we will be using a `Statement` object to issue the SQL statement. However instead of using the `executeQuery()` method which is for database reads, we will want to use the `executeUpdate()` method for database inserts, updates and deletes.
-
 The following code snippet will insert a record into the database. Make sure to modify the values for the entry you want to add.
 ```java
 sql = "INSERT INTO PCB01.A1111111 (LASTNAME, FIRSTNAME, EXTENTION, ZIPCODE) VALUES ('BAGGINS', 'FRODO', '123456A', '12345')";
 Statement st = connection.createStatement();
 System.out.println("Inserted " + st.executeUpdate(sql) + " record");
 ```		
-
 Run the Java application and verify that your new record was inserted properly. You should see something like the following in your output:
 ```
 Inserted 1 record
-
 Displaying query results
 LASTNAME: BAGGINS   
 FIRSTNAME: FRODO     
 EXTENTION: 123456A   
 ZIPCODE: 12345     
 ```
-
 What happens if you try to insert the same record again? We would expect an error as we can't have two records with the same unique key. Try running your application again. You should see the following error message
 ```
 com.ibm.ims.drda.base.DrdaException: An error occurred processing the database DHIDPHO1. AIB return code: 0x900. AIB reason code: 0x0. AIB error code extension: 0x0. DBPCB status code: II.
  ```
- 
 You'll notice that the we get some AIB return and reason code in addition to a DBPCB status code. This error information is actually returned by the IMS database as a result of attempting to execute the translated DL/I query. Looking at the [IMS knowledge center](https://www.ibm.com/support/knowledgecenter/en/SSEPH2_15.1.0/com.ibm.ims15.doc.msgs/msgs/ii.htm), we can see that the II status code is returned on a DL/I ISRT call when a record already exists in the database.
-
 Before moving on to the next exercise let's make sure we comment out any code we added to the `executeASqlInsertOrUpdate()` method.
+-->
 
-
+<!--
 ### Exercise 6: Updating a record in the database
 Let's take the record we inserted in the previous exercise and update it using a SQL UPDATE statement. The format for a SQL UPDATE can be found [here](https://www.w3schools.com/sql/sql_update.asp).
-
 We want to make sure only update the record we inserted earlier. This can be done by qualifying on the LASTNAME field which we know is a unique field. The following code snippet shows how to issue a SQL UPDATE query, make sure to modify the fields and qualifier as necessary.
 ```java
 sql = "UPDATE PCB01.A1111111 SET FIRSTNAME='BILBO' WHERE LASTNAME='BAGGINS'";
 Statement st = connection.createStatement();
 System.out.println("Updated " + st.executeUpdate(sql) + " record(s)");
 ```
-
 After running your application, you should see similar output in your console:
 ```
 Updated 1 record(s)
-
 Displaying query results
 LASTNAME: BAGGINS   
 FIRSTNAME: BILBO     
 EXTENTION: 123456A   
 ZIPCODE: 12345
 ```
-
 This concludes the distributed portion of the lab. Make sure to clean up your application by going back into the `main()` method and commenting out the following lines:
 ```java
 //executeASqlInsertOrUpdate();
 //executeAndDisplaySqlQuery();
 ```
+-->
 
-
+<!--
 ### Exercise 7: Creating a distributed DL/I connection
 We're now going to shift over to the DL/I programming model. This is the native query language used by IMS. Typically, the only times people would use this is if they're issuing a DL/I call that doesn't have a SQL equivalent (such as Get Next In Parent (GNP) call) or when they're converting an existing application where the DL/I queries are already defined from one language (e.g., COBOL, PL/I) to Java .
-
 Before we start coding let's quickly talk about PSBs. A PSB is the entry point into any IMS resource. For the IMS Java DL/I API, we will essentially be using the PSB to represent a physical connection to an IMS database. Most actions that you use to do on a JDBC `Connection` object, you could do the same to the `PSB` object. We'll see other similarities as well between the two interfaces but the main ones to keep in mind are:
 * **Connection** == **PSB**
 * **Statement** == **PCB**
 * **ResultSet** == **PathSet**
-
 Let's again start by uncommenting the following line in the `main()` method:
 ```java
 createAnImsDliConnection(4).close();
 ```
-
 Now navigate to the `createAnImsDliConnection()` method where we will implement the distributed (Type-4) connection.
-
 We will again reuse the same connection information from our JDBC connection for this. This is because both APIs take advantage of the same back end systems including the IMS Connect TCP/IP gateway.
-
 You'll first want to instantiate an `IMSConnectionSpec` object to hold all of the connection properties. The following code snippet shows how to do that:
 ```java
 IMSConnectionSpec imsConnSpec = IMSConnectionSpecFactory.createIMSConnectionSpec();
@@ -357,9 +341,7 @@ imsConnSpec.setUser("myUser");
 imsConnSpec.setPassword("myPass");
 imsConnSpec.setDriverType(driverType);
 ```
-
 Notice that the main difference here from what we did with the `IMSDataSource` object in Exercise 1, is we use `IMSConnectionSpec.setDatastoreServer()` instead of `IMSDataSource.setHost()` but they both point to the same hostname or ip address for your IMS Connect.
-
 You can validate you are getting a valid connection when you run this if you see the same output from Exercise 1:
 ```
 Apr 19, 2018 7:23:50 PM com.ibm.ims.dli.PSBInternalFactory createPSB
@@ -373,82 +355,71 @@ INFO: Server ODBM DDM level:  1 2 3 4 5 6 7
 Apr 19, 2018 7:23:51 PM com.ibm.ims.drda.t4.T4ConnectionReply checkServerCompatibility
 INFO: Client ODBM DDM level:  1 2 3 4 5 6 7
 ```
-
 Now that our connection code is good, go back and comment out the following line in your `main()` method:
 ```java
 //createAnImsDliConnection(4).close();
 ```
+-->
 
+<!--
 ### Exercise 8: Read all records from the database using GU/GN calls
 Now that we have a connection lets go ahead and retrieve all records from the database. This would be the equivalent of a `SELECT * FROM PCB01.A1111111` SQL query. In Exercise 4, we saw that such a query translated to the following in DL/I:
 ```
 GU   A1111111 
-
 (LOOP)
 GN   A1111111 
 ```
-
 So we know we will be issuing a Get Unique (GU) call and then looping through a bunch of Get Next (GN) calls with a SSA List of A1111111. Let's go ahead and uncomment the following line in the `main()` method.
 ```java
 readAllRecordsWithDliGuGnCalls();
 ```
-
 Inside the `readAllRecordsWithDliGuGnCalls()` method, we will take advantage of the `createAnImsDliConnection()` you wrote previously. From that we will get a `PSB` object which we will then used to retrieve a `PCB` and from that we will get a `SSAList` and finally a `Path` object. The following code snippet shows how to create each of those objects.
 ```java
 PCB pcb = psb.getPCB("PCB01");
 SSAList ssaList = pcb.getSSAList("A1111111");
 Path path = ssaList.getPathForRetrieveReplace();
 ```
-
 So the SSA list here is used for our qualification statement. Because we're retrieving all records, we only need to specify the segment name *A1111111* within the SSAList.
-
 You can think of the Path object as a byte buffer that we will use to store record data. In this case we are preallocating the space to store the record once we retrieve it.
-
 Now that we have all the necessary components, let's issue our GU call. Remember how earlier we said a `PCB` in the DL/I API works similarly to a `Statement` in JDBC. So instead of doing a `Statement.executeQuery()`, we will issue a `PCB.getUnique()` as shown below:
 ```java
 pcb.getUnique(path, ssaList, false);
 ```
-
 Now wait what is that third parameter used for? It's actually to denote whether we are doing a hold call which will preserve positioning within the IMS database. This would cause a Get Hold Unique (GHU) call to be flowed instead of a GU. In this case since we're just doing read operations, we will just set it to false.
-
 The `PCB.getUnique()` method should populate our `Path` object that we passed in. Go ahead and display the data that was retrieved. The following code shows how to do that for the **FIRSTNAME** and **LASTNAME** fields.
 ```java
 System.out.println("FIRSTNAME: " + path.getString("FIRSTNAME"));
 System.out.println("LASTNAME: " + path.getString("LASTNAME"));
 ```
-
 We should of gotten console output similar to the following:
 ```
 FIRSTNAME: BILBO      
 LASTNAME: BAGGINS  
 ```
-
 Now let's retrieve the remaining records using the `PCB.getNext()` method. Remember that we'll want to loop through this. The `PCB.getNext()` method will return a boolean value indicating whether another record exists in the database. Lets do a simple `while` loop to process and display data from the remaining records.
 ```java
 while(pcb.getNext(path, ssaList, false)) {
 	System.out.println("FIRSTNAME: " + path.getString("FIRSTNAME"));
 }
 ```
-
 Run your application and validate your output looks like what you would expect. Once you're satisfied, go back to the `main()` method and comment out the following line:
 ```java
 //readAllRecordsWithDliGuGnCalls();
 ```
+-->
 
+<!--
 ### Exercise 9: Reading a specific record with a DL/I GU call
 This exercise will be very similar to the previous one except we will be retrieving just one specific record. To be precise, we will be retrieving the record that was inserted in Exercise 5. Let's start by uncommenting the following line in the `main()` method and then navigating to the `readASpecificRecordWithDliGu()` method
 ```java
 readASpecificRecordWithDliGu();
 ```
-
 Essentially we want to issue a query similar to the following:
 `SELECT * FROM PCB01.A1111111 WHERE LASTNAME='BAGGINS'`
-
 Feel free to run your specific query through the translation but essentially the equivalent query will look like the following:
 ```
 GU   A1111111(A1111111EQBAGGINS   )
 ```
-
 The first A111111 is the name of our segment. The second A1111111 is actually the key field represented by LASTNAME. You can actually see the mapping if you looked at the XML metadata for that:
 ```xml
 <field name="LASTNAME" imsName="A1111111" seqType="U" imsDatatype="C">
@@ -460,36 +431,32 @@ The first A111111 is the name of our segment. The second A1111111 is actually th
     <applicationDatatype datatype="CHAR"/>
 </field>
 ```
-
 So basically the code should be the same as Exercise 8 except for where we build the qualification statement. To get the following **A1111111(A1111111EQBAGGINS   )**, you would use the following code sample:
 ```java
 SSAList ssaList = pcb.getSSAList("A1111111");
 ssaList.addInitialQualification("A1111111", "LASTNAME", SSAList.EQUALS, "BAGGINS");
 ```
-
 Once you're done coding and validating your output, go back to the `main()` method and comment out the following line:
 ```java
 //readASpecificRecordWithDliGu();
 ```
+-->
 
+<!--
 ### Exercise 10: Updating a specific record with a DL/I GU and REPL call
 In this exercise we will update the record that we just retrieved. Uncomment the following lines in the `main()` method and then navigate to the `updateASpecificRecordWithDliGhuRepl()` method.
 ```java
 updateASpecificRecordWithDliGhuRepl();
 readASpecificRecordWithDliGu();
 ```
-
 Here we will be writing the equivalent of the following SQL statement:
 `UPDATE PCB01.A1111111 SET FIRSTNAME='FRODO' WHERE LASTNAME='BAGGINS'`
- 
 Feel free to run your specific SQL through the translator but in general the DL/I equivalent should look like the following:
 ```
 GHU  A1111111(A1111111EQBAGGINS   )
 REPL
 ```
-
 The first call is very similar to the GU statement we issued in Exercise 9. The main difference is now we're doing a GHU instead of GU which if you remember is toggled through the boolean parameter of the `PCB.getUnique()` method. This will save our position in the database so we can perform our update.
-
 Here's the code for the GHU call:
 ```java
 PCB pcb = psb.getPCB("PCB01");
@@ -498,20 +465,19 @@ ssaList.addInitialQualification("A1111111", "LASTNAME", SSAList.EQUALS, "BAGGINS
 Path path = ssaList.getPathForRetrieveReplace();
 pcb.getUnique(path, ssaList, true);
 ```
-
 Now the Path object here contains the current row data. We'll want to update the values in the path object and then push it back to the database with the `PCB.replace()` method. In the following example we're updating the **FIRSTNAME** back to *FRODO* from *BILBO*.
 ```java
 path.setString("FIRSTNAME", "FRODO");
 pcb.replace(path);
 ```
-
 Run the application and validate that your record was indeed updated. Once you're satisfied go back to the `main()` method and comment the following lines:
 ```java
 //updateASpecificRecordWithDliGhuRepl();
 //readASpecificRecordWithDliGu();
 ```
+-->
 
-
+<!--
 ## Writing a native Java application
 The IMS Transaction Manager supports writing native IMS applications in Java within an IMS Java dependent region. IMS supports several different types of [dependent regions](https://www.ibm.com/support/knowledgecenter/en/SSEPH2_15.1.0/com.ibm.ims15.doc.sag/system_intro/ims_depend-regions.htm):
 * Batch Message Processing (BMP) 
@@ -519,46 +485,35 @@ The IMS Transaction Manager supports writing native IMS applications in Java wit
 * IMS Fast Path (IFP)
 * Java Message Processing (JMP)
 * Java Batch Processing (JBP)
-
 Typically when referring to the IMS Java dependent regions, we will be talking about both JMP and JBP regions. Also the JMP and JBP regions are the respective Java equivalents for MPP and BMP regions. 
-
 IMS actually supports Java in every dependent region for [language interoperability](https://developer.ibm.com/zsystems/documentation/java/ims/). The region that gets chosen will depend on what language is called first. If your application entry point is written in COBOL which then calls Java, you should be using a non-Java dependent region. If your application entry point is Java, then a Java dependent region should be used. This lab will not cover language interoperability.
+-->
 
+<!--
 ### Exercise 11: Writing a JBP application
-
 We will be writing a simple JBP application here that will access the same database we just looked at. Let's start by uncommenting the following line in the `main()` method.
 ```java
 executeNativeApplication();
 ```
-
 Within the `executeNativeApplication()` method, you'll see that the first thing we do is create a Type-2 JDBC connection. This code hasn't been implemented yet so let's go back to the `createAnImsConnection()` method and add the code for that within the following else block:
 ```java
 } else if (driverType == 2) {
   // A Type-2 JDBC connection is used for local access on the mainframe
   // Exercise 7: Retrieve a Type-2 JDBC connection and set it to the connection object
-			
 }
 ```
-
 The implementation is remarkably similar to what we did for our Type-4 connection. The only differences is that we no longer need to a host or port as we're not connecting through TCP/IP and we specify the Driver Type to be 2.
-
 After you have finished implementing the code to create a Type-2 connection, let's go back to the `executeNativeApplication()` method. You'll see that in addition to the `Connection` object, we will be working with an `Application` and a `Transaction` object. These will be used to define our unit of work. You can think of the unit of work as the scope for what actions will be committed or rollbacked. 
-
 Let's add some work within the unit of work by processing a simple SQL SELECT query to retrieve the record you had inserted and updated earlier in Exercises 5 and 6. Make sure to display it as well with `System.out.println()`. The main difference with what we did earlier is this output will not be displayed within the Eclipse console but instead to the job log for our native application.
-
 While the unit of work for this application is very small, you can have much longer running batch jobs. For long jobs you'll want to issue checkpoints in case an error occurs and you don't want to start from the beginning. This can be done by using the `Transaction.checkpoint()` and `Transaction.restart()` methods. We won't be covering this in the lab but a code sample can be found [here](https://www.ibm.com/support/knowledgecenter/en/SSEPH2_15.1.0/com.ibm.ims15.doc.apg/ims_developingjbpapps.htm).
-
 #### Exporting your native application
 Now because this is meant to be a native application, it will need to be deployed to the mainframe. In order to deploy this let's go ahead and export the project as a Java archive (JAR) file.
-
 1. Right click on the **ims-java-lab** project in the **Project Explorer** view on the left. 
 2. Select **Export...** from the context pop-up menu.
 3. Choose the **JAR File** option and click **Next**
 4. In the **Select the export destination:** input box, choose an easy to navigate to directory and provide the following file name for the jar file, *ImsJavaLab.jar*
-
 Now you have a JAR file containing your native IMS transaction that's ready for deployment
-
 #### Deploying your native application
 Deploying a native application typically requires an IMS System Programmer to setup your IMS dependent region. Some of this work can be automated using some DevOps solution such as Jenkins like the one described [here](https://github.com/imsdev/ims-devops-java-jenkins).
-
 This lab is currently designed such that you do not have System Programmer privileges. Please notify the lab instructor you are ready to deploy your native application and they will deploy and run the JBP application for you and display your custom output in the job log.
+-->
