@@ -183,15 +183,14 @@ Since we don't have either available, we're going to take advantage of a little 
 * PHIDPHO1.xml
 * IVPDB1.xml
 Let's modify our connection property in the `createAnImsConnection()` method to point to our local XML file:
-```java
+java
 ds.setDatabaseName("xml://PHIDPHO1");
-```
 Now re-run the `DatabaseMetaData.getColumns()` method to view the additional fields. You should now see the following additional fields:
 * LASTNAME
 * FIRSTNAME
 * EXTENTION
 * ZIPCODE
---!>
+-->
 
 That completes Exercise 2. Let's go ahead and disable the following line in the `main()` method by commenting it out:
 ```java
