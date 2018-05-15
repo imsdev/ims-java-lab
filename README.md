@@ -206,7 +206,7 @@ executeAndDisplaySqlQuery();
 
 Let's now navigate to the `executeAndDisplaySqlQuery()` method and write our SQL SELECT statement to issue a read request against the database. 
 
-An initial query has already been written `SELECT * FROM PCB01.A1111111`. This is based off of our database metadata discovery where we know the PSB PHIDPHO1 contains a PCB PCB01 which has a segment A111111 that contains fields related to a phonebook.
+An initial query has already been written `SELECT * FROM PCB01.A1111111`. This is based off of our database metadata discovery where we know the PSB DFSIVP1 contains a PCB PCB01 which has a segment A111111 that contains fields related to a phonebook.
 
 The way we would execute a read query is through the `Statement.executeQuery()` method. We can get a `Statement` object off of the `Connection`. The following code shows how to do that.
 
