@@ -168,14 +168,13 @@ DBD_NAME: IVPDB1
 DBD_TIMESTAMP: 1620715292519
 ```
 
-<!--
 We can dig even further into the database segments and fields with the following query. Use the same format as above to process the ResultSet object:
-java
+```java
 // Display IMS segment information
 rs = dbmd.getTables("DFSIVP1", "PCB01", null, null);
 // Display IMS field information
 rs = dbmd.getColumns("DFSIVP1", "PCB01", "A1111111", null);
--->
+```
 
 <!--
 You'll notice that there is a lack of field information for the phonebook database. Traditionally, additional metadata information would be stored in a COBOL copybook or a PL/I include file. It would be up to the IMS Database Administrator (DBA) and IMS System Programmer to incorporate this information into the IMS catalog. 
@@ -217,11 +216,16 @@ ResultSet rs = st.executeQuery(sql);
 
 You can process the `ResultSet` in a similar manner to what we did in Exercise 2. You should see output similar to the following:
 ```
+A1111111: LAST1
+```
+<!--
+```
 LASTNAME: LAST1     
 FIRSTNAME: FIRST1    
 EXTENTION: 8-111-1111
 ZIPCODE: D01/R01 
 ```
+-->
 
 
 ### Exercise 4: Looking at how IMS breaks down SQL queries
@@ -254,12 +258,14 @@ NOTE: GU/GN VALID only if not overruled by CONCUR_UPDATABLE ResultSet concurrenc
 
 The SQL SELECT query which can be considered a batch retrieve, is translated into a series of singleton DL/I calls. The first call is to a **GET UNIQUE** which retrieves the first record to match a qualifier. The IMS JDBC driver will then repeatedly call **GET NEXT** until it retrieves all records from the database that match the qualifier.
 
-Feel free to come back to this exercise in order to look at the translation for the SQL statements in Exercise 5 and 6. For now, we'll go ahead and comment the following line in the `main()` method.
+**Congratulation** you have completed the lab!
 
+<!--
+Feel free to come back to this exercise in order to look at the translation for the SQL statements in Exercise 5 and 6. For now, we'll go ahead and comment the following line in the `main()` method.
 ```java
 //executeAndDisplaySqlQuery();
 ```
-
+-->
 <!--
 ### Exercise 5: Inserting a record into the database
 Now that we have a base understanding of what the IMS database looks like and what data resides in that database, we'll go ahead and insert in a new phonebook record. Let's start off by uncommenting the following lines in the `main()` method
